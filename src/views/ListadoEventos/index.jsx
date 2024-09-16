@@ -5,7 +5,7 @@ import "./styles.css";
 
 const ListadoEventos = () => {
     const [events, setEvents] = useState([]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1);  // Página actual
     const [limit] = useState(10);
     const [total, setTotal] = useState(0);
     const [filters, setFilters] = useState({
@@ -14,49 +14,44 @@ const ListadoEventos = () => {
         name: '',
         category: ''
     });
-    const [applyFilters, setApplyFilters] = useState(true); // Inicialmente true
+    const [applyFilters, setApplyFilters] = useState(false);  // Inicia en false para evitar solicitud automática
 
     const fetchEvents = async () => {
-        const {
-            name = '',
-            tag = '',
-            start_date = '',
-            category = '',
-            page = 1,
-            limit = 10
-        } = filters;
-
+        const { name = '', tag = '', category = '' } = filters;
         let queryParams = [];
 
         if (name.trim()) queryParams.push(`name=${name}`);
         if (tag.trim()) queryParams.push(`tag=${tag}`);
-        if (start_date.trim()) queryParams.push(`startdate=${start_date}`);
+        if (filters.startDate.trim()) {
+            const formattedDate = new Date(filters.startDate).toISOString().split('T')[0];
+            queryParams.push(`startdate=${formattedDate}`);
+        }
         if (category.trim()) queryParams.push(`category=${category}`);
-        if (page) queryParams.push(`page=${page}`);
-        if (limit) queryParams.push(`limit=${limit}`);
+        queryParams.push(`page=${page}`);
+        queryParams.push(`limit=${limit}`);
 
         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-        console.log('Fetching data with query:', queryString);
+        console.log('Fetching data with query:',`${config.url}api/event${queryString}`);
+
         try {
             const response = await axios.get(`${config.url}api/event${queryString}`);
-            
-            setEvents(response.data.collection);
-            setTotal(response.data.pagination.total);
+            const eventsData = response?.data?.collection || [];
+            setEvents(eventsData);
+
+            const totalEvents = response?.data?.pagination?.total || 0;
+            setTotal(totalEvents);
         } catch (error) {
             console.error('Error fetching events:', error);
+            setEvents([]);
+            setTotal(0);
         }
     };
 
+    // Ejecutar fetchEvents cuando cambia la página o se aplican filtros
     useEffect(() => {
-        fetchEvents(); // Llama a fetchEvents al montar el componente
-    }, []);
-
-    useEffect(() => {
-        if (applyFilters || page === 1) { // Ejecuta en el primer render y cuando se aplican filtros
-            fetchEvents();
-            setApplyFilters(false); // Resetea applyFilters después de aplicar
-        }
-    }, [applyFilters, page]);
+        fetchEvents();
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [page, applyFilters]);
 
     const handleFilterChange = (e) => {
         setFilters({
@@ -66,11 +61,12 @@ const ListadoEventos = () => {
     };
 
     const handleApplyFilters = () => {
-        setApplyFilters(true); // Establece applyFilters a true para aplicar filtros
+        setPage(1);  // Reinicia la página al aplicar filtros
+        setApplyFilters(!applyFilters);  // Dispara el efecto para hacer la solicitud
     };
 
     const handleNextPage = () => {
-        if (page * limit < total) {
+        if (page * limit < parseInt(total)) {
             setPage(page + 1);
         }
     };
