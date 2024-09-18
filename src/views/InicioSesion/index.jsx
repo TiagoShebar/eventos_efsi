@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import FormInput from '../../components/FormInput/input';
+import FormInput from '../../components/FormInput';
 import config from '../../config';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import "./styles.css";
+import { Link } from 'react-router-dom';
 
 const InicioSesion = () => {
     const [formData, setFormData] = useState({
@@ -97,9 +98,9 @@ const InicioSesion = () => {
                 {loginError && <p className="error-text">{loginError}</p>}
                 
                 <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
-                <p><a href="/register">¿No tienes una cuenta? Regístrate aquí.</a></p>
+                <p>¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link></p>
             </form>
-        </div>
+        </div> 
     );
 }
 

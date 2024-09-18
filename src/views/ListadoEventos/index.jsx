@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../../config';
+import FormInput from '../../components/FormInput'; // Asegúrate de que la ruta sea correcta
 import "./styles.css";
 
 const ListadoEventos = () => {
@@ -31,7 +32,7 @@ const ListadoEventos = () => {
         queryParams.push(`limit=${limit}`);
 
         const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-        console.log('Fetching data with query:',`${config.url}api/event${queryString}`);
+        console.log('Fetching data with query:', `${config.url}api/event${queryString}`);
 
         try {
             const response = await axios.get(`${config.url}api/event${queryString}`);
@@ -82,33 +83,36 @@ const ListadoEventos = () => {
             <h1>Listado de Eventos</h1>
             
             <div className="filters">
-                <input 
-                    type="text" 
-                    name="name" 
-                    placeholder="Buscar por nombre" 
-                    value={filters.name} 
-                    onChange={handleFilterChange} 
+                <FormInput
+                    label="Buscar por nombre"
+                    type="text"
+                    name="name"
+                    value={filters.name}
+                    onChange={handleFilterChange}
+                    placeholder="Buscar por nombre"
                 />
-                <input 
-                    type="text" 
-                    name="category" 
-                    placeholder="Categoría" 
-                    value={filters.category} 
-                    onChange={handleFilterChange} 
+                <FormInput
+                    label="Categoría"
+                    type="text"
+                    name="category"
+                    value={filters.category}
+                    onChange={handleFilterChange}
+                    placeholder="Categoría"
                 />
-                <input 
-                    type="text" 
-                    name="tag" 
-                    placeholder="Etiqueta" 
-                    value={filters.tag} 
-                    onChange={handleFilterChange} 
+                <FormInput
+                    label="Etiqueta"
+                    type="text"
+                    name="tag"
+                    value={filters.tag}
+                    onChange={handleFilterChange}
+                    placeholder="Etiqueta"
                 />
-                <input 
-                    type="date" 
-                    name="startDate" 
-                    placeholder="Fecha de inicio" 
-                    value={filters.startDate} 
-                    onChange={handleFilterChange} 
+                <FormInput
+                    label="Fecha de inicio"
+                    type="date"
+                    name="startDate"
+                    value={filters.startDate}
+                    onChange={handleFilterChange}
                 />
                 <button onClick={handleApplyFilters}>Aplicar Filtros</button>
             </div>
