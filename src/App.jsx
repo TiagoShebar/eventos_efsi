@@ -7,6 +7,7 @@ import ListadoEventos from './views/ListadoEventos/index.jsx';
 import InicioSesion from './views/InicioSesion/index.jsx';
 import Registro from './views/Registro/index.jsx';
 import { AuthProvider } from "./AuthContext";
+import Footer from './components/Footer/index.jsx';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route exact path="/register" element={<Registro />} />
         </Routes>   
       </main>
-      <footer>@copy 2024</footer>
+      <Footer />
     </AuthProvider>
   );
 }
