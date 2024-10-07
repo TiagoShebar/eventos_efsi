@@ -3,6 +3,7 @@ import axios from 'axios';
 import config from '../../config';
 import FormInput from '../../components/FormInput'; // Asegúrate de que la ruta sea correcta
 import "./styles.css";
+import { Link } from 'react-router-dom';
 
 const ListadoEventos = () => {
     const [events, setEvents] = useState([]);
@@ -120,14 +121,17 @@ const ListadoEventos = () => {
             <ul>
                 {events.length > 0 ? (
                     events.map(event => (
-                        <li key={event.id}>
-                            <h2>{event.name}</h2>
-                            <p>{event.description}</p>
-                            <p>Categoría: {event.event_category.name}</p>
-                            <p>Ubicación: {event.event_location.full_address}</p>
-                            <p>Fecha de inicio: {new Date(event.start_date).toLocaleString()}</p>
-                            <p>Tags: {event.tags ? event.tags.map(tag => tag.name).join(', ') : 'N/A'}</p>
-                        </li>
+                        <div>
+                            <li key={event.id}>
+                                <h2>{event.name}</h2>
+                                <p>{event.description}</p>
+                                <p>Categoría: {event.event_category.name}</p>
+                                <p>Ubicación: {event.event_location.full_address}</p>
+                                <p>Fecha de inicio: {new Date(event.start_date).toLocaleString()}</p>
+                                <p>Tags: {event.tags ? event.tags.map(tag => tag.name).join(', ') : 'N/A'}</p>
+                            </li>
+                            <Link to={`/detailEvent/${event.id}`}></Link>
+                        </div>
                     ))
                 ) : (
                     <p>No hay eventos disponibles</p>

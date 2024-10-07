@@ -8,6 +8,7 @@ import InicioSesion from './views/InicioSesion/index.jsx';
 import Registro from './views/Registro/index.jsx';
 import { AuthProvider } from "./AuthContext";
 import Footer from './components/Footer/index.jsx';
+import DetalleEvento from './views/DetalleEvento/index.jsx';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/" element={<ListadoEventos />} />
           <Route exact path="/login" element={<InicioSesion />} />
           <Route exact path="/register" element={<Registro />} />
+          <Route exact path="/detailEvent/:id" element={<DetalleEvento/>}/>
         </Routes>   
       </main>
       <Footer />
