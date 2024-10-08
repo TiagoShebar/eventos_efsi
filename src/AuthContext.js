@@ -17,10 +17,8 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    const ifIsLoggedIn = (e) => {
+    const ifIsLoggedIn = () => {
         if (!isLoggedIn) {
-            e.preventDefault();
-            // Define openModal here or import it if it's defined elsewhere
             navigate("/login");
         }
     }

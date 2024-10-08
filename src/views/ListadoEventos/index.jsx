@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import config from '../../config';
 import FormInput from '../../components/FormInput'; // Asegúrate de que la ruta sea correcta
 import "./styles.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from "../../AuthContext";
 
 const ListadoEventos = () => {
     const [events, setEvents] = useState([]);
@@ -17,6 +18,8 @@ const ListadoEventos = () => {
         category: ''
     });
     const [applyFilters, setApplyFilters] = useState(false);  // Inicia en false para evitar solicitud automática
+    const { ifIsLoggedIn } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const fetchEvents = async () => {
         const { name = '', tag = '', category = '' } = filters;
@@ -79,9 +82,18 @@ const ListadoEventos = () => {
         }
     };
 
+    const handleCreateEventClick = (e) => {
+        e.preventDefault();
+        if (ifIsLoggedIn()) {
+            history.push('/formularioCrearEvento'); // Redirige a la página de creación de evento
+        } else {
+            alert('Debes estar autenticado para crear un evento.'); // Muestra un mensaje de error
+        }
+    };
+
     return (
         <div className="event-list">
-            <h1>Listado de Eventos</h1>
+            <div><h1>Listado de Eventos</h1><button onClick={handleCreateEventClick}>Crear</button></div>
             
             <div className="filters">
                 <FormInput
@@ -123,14 +135,18 @@ const ListadoEventos = () => {
                     events.map(event => (
                         <div>
                             <li key={event.id}>
-                                <h2>{event.name}</h2>
-                                <p>{event.description}</p>
-                                <p>Categoría: {event.event_category.name}</p>
-                                <p>Ubicación: {event.event_location.full_address}</p>
-                                <p>Fecha de inicio: {new Date(event.start_date).toLocaleString()}</p>
-                                <p>Tags: {event.tags ? event.tags.map(tag => tag.name).join(', ') : 'N/A'}</p>
+                                <div>
+                                    <h2>{event.name}</h2>
+                                    <p>{event.description}</p>
+                                    <p>Categoría: {event.event_category.name}</p>
+                                    <p>Ubicación: {event.event_location.full_address}</p>
+                                    <p>Fecha de inicio: {new Date(event.start_date).toLocaleString()}</p>
+                                    <p>Tags: {event.tags ? event.tags.map(tag => tag.name).join(', ') : 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <Link to={`/detailEvent/${event.id}`}>Ver detalle</Link>
+                                </div>
                             </li>
-                            <Link to={`/detailEvent/${event.id}`}></Link>
                         </div>
                     ))
                 ) : (

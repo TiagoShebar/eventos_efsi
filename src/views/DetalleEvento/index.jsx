@@ -14,9 +14,7 @@ const DetalleEvento = () => {
         const fetchEventDetail = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get(`${config.url}api/event/${id}`,
-                    {headers:{Authorization:`bearer ${token}`}}
-                );
+                const response = await axios.get(`${config.url}api/event/${id}`);
 
                 setEventData(response);
 
