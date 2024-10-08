@@ -21,6 +21,9 @@ export const AuthProvider = ({ children }) => {
         if (!isLoggedIn) {
             navigate("/login");
         }
+        else{
+            return true;
+        }
     }
 
     return (

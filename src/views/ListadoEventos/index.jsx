@@ -85,9 +85,7 @@ const ListadoEventos = () => {
     const handleCreateEventClick = (e) => {
         e.preventDefault();
         if (ifIsLoggedIn()) {
-            history.push('/formularioCrearEvento'); // Redirige a la página de creación de evento
-        } else {
-            alert('Debes estar autenticado para crear un evento.'); // Muestra un mensaje de error
+            navigate('/formularioCrearEvento'); // Redirige a la página de creación de evento
         }
     };
 
