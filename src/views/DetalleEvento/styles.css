@@ -1,0 +1,47 @@
+.event-detail-container {
+    max-width: 800px; /* Ancho máximo */
+    margin: 20px auto; /* Centrar en la página */
+    padding: 20px;
+    background: #f9f9f9; /* Color de fondo suave */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.event-title {
+    font-size: 2em; /* Tamaño de fuente grande */
+    margin-bottom: 10px; /* Espacio debajo */
+    color: #333; /* Color del texto */
+}
+
+.event-description {
+    font-size: 1.2em; /* Tamaño de fuente mediano */
+    margin-bottom: 20px; /* Espacio debajo */
+    line-height: 1.5; /* Altura de línea para mejor legibilidad */
+}
+
+.event-info {
+    margin-bottom: 20px; /* Espacio debajo */
+}
+
+.event-info p {
+    margin: 5px 0; /* Espacio entre líneas */
+}
+
+.subscribe-button {
+    padding: 10px 15px; /* Espaciado interno */
+    background-color: #4CAF50; /* Color verde */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano al pasar */
+    transition: background 0.3s; /* Transición suave */
+}
+
+.subscribe-button:hover {
+    background-color: #45a049; /* Color más oscuro al pasar el mouse */
+}
+
+.error-message {
+    color: #f44336; /* Color rojo para errores */
+    margin-top: 20px; /* Espacio encima */
+}

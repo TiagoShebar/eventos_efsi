@@ -33,18 +33,6 @@ const InicioSesion = () => {
         let valid = true;
         let newErrors = { username: '', password: '' };
 
-        // Verificación de username
-        if (formData.username.trim().length < 3) {
-            newErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
-            valid = false;
-        }
-
-        // Verificación de password
-        if (formData.password.trim().length < 6) {
-            newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-            valid = false;
-        }
-
         setErrors(newErrors);
         return valid;
     };
@@ -59,8 +47,9 @@ const InicioSesion = () => {
                     // Guardar el token y redirigir
                     console.log('Inicio de sesión exitoso');
                     localStorage.setItem("token", response.data.token);
-                    navigate("/"); // Redirige al usuario a la página principal
                     window.location.reload();
+                    navigate(-1);
+                    
                 } else {
                     setLoginError(response.data.message);
                 }

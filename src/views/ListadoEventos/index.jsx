@@ -84,14 +84,15 @@ const ListadoEventos = () => {
 
     const handleCreateEventClick = (e) => {
         e.preventDefault();
-        if (ifIsLoggedIn()) {
-            navigate('/formularioCrearEvento'); // Redirige a la página de creación de evento
+        if(!ifIsLoggedIn()){
+            return null;
         }
+        navigate('/formularioCrearEvento'); // Redirige a la página de creación de evento
     };
 
     return (
         <div className="event-list">
-            <div><h1>Listado de Eventos</h1><button onClick={handleCreateEventClick}>Crear</button></div>
+            <div><h1>Listado de Eventos</h1><button className="create-button" onClick={handleCreateEventClick}>Crear</button></div>
             
             <div className="filters">
                 <FormInput

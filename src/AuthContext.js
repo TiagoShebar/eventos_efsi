@@ -1,10 +1,12 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmModal from './components/ConfirmModal';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,16 +21,27 @@ export const AuthProvider = ({ children }) => {
 
     const ifIsLoggedIn = () => {
         if (!isLoggedIn) {
-            navigate("/login");
+            setIsModalOpen(true); // Abre el modal
+            return false;
         }
         else{
             return true;
         }
     }
 
+    const handleConfirm = () => {
+        navigate("/login");
+        setIsModalOpen(false); // Cierra el modal
+    };
+
+    const handleClose = () => {
+        setIsModalOpen(false); // Cierra el modal sin hacer nada
+    };
+
     return (
         <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, ifIsLoggedIn }}>
             {children}
+            <ConfirmModal isOpen={isModalOpen} onClose={handleClose} onConfirm={handleConfirm} />
         </AuthContext.Provider>
     );
 };

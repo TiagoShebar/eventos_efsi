@@ -3,13 +3,13 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config';
 import { AuthContext } from "../../AuthContext";
+import './styles.css'; // Importa tus estilos aquí
 
 const DetalleEvento = () => {
     const { id } = useParams();
     const [eventData, setEventData] = useState(null);
-    const [isSuscribed, setIsSuscribed] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { isLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, ifIsLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchEventDetail = async () => {
@@ -20,20 +20,8 @@ const DetalleEvento = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log(response.data);
-                setEventData(response.data);
-
-                // Check if the user is subscribed
-                if (isLoggedIn) {
-                    const enrollmentResponse = await axios.patch(`${config.url}api/event/${id}/enrollment/${1}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-                    console.log('Enrollment response:', enrollmentResponse.data);
-
-                    setIsSuscribed(enrollmentResponse.data !== null);
-                }
+                console.log(response.data[0]);
+                setEventData(response.data[0]);
             } catch (error) {
                 console.error('Error fetching event details:', error);
                 setErrorMessage('Error fetching event details. Please try again.');
@@ -43,12 +31,12 @@ const DetalleEvento = () => {
         fetchEventDetail();
     }, [id, isLoggedIn]);
 
-    const handleSuscribeToEvent = async () => {
-        if (!isLoggedIn) {
-            alert('Por favor, inicie sesión para suscribirse.');
+    const handleSuscribeToEvent = async (e) => {
+        e.preventDefault();
+        if (!ifIsLoggedIn()) {
             return;
         }
-        
+
         const token = localStorage.getItem('token');
         try {
             const response = await axios.post(`${config.url}api/event/${id}/enrollment`, {}, {
@@ -57,8 +45,7 @@ const DetalleEvento = () => {
                 },
             });
             if (response.status === 200) {
-                setIsSuscribed(true);
-                setErrorMessage(''); // Clear any previous error messages
+                setErrorMessage(''); // Clear previous error messages
             }
         } catch (error) {
             console.error('Error enrolling to event:', error);
@@ -66,39 +53,25 @@ const DetalleEvento = () => {
         }
     };
 
-    const handleDesuscribeToEvent = async () => {
-        const token = localStorage.getItem('token');
-        try {
-            const response = await axios.delete(`${config.url}api/event/${id}/enrollment`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (response.status === 200) {
-                setIsSuscribed(false);
-                setErrorMessage(''); // Clear any previous error messages
-            }
-        } catch (error) {
-            console.error('Error unsubscribing from event:', error);
-            setErrorMessage(error.response?.data || 'Error unsubscribing from event. Please try again.');
-        }
-    };
-    
     return (
-        <div>
-            {eventData && (
+        <div className="event-detail-container">
+            {eventData ? (
                 <>
-                    <h1>{eventData.name}</h1>
-                    <p>{eventData.description}</p>
-                    {/* Other event details */}
-                    {isSuscribed ? (
-                        <button onClick={handleDesuscribeToEvent}>Desuscribirme</button>
-                    ) : (
-                        <button onClick={handleSuscribeToEvent}>Suscribirme</button>
-                    )}
+                    <h1 className="event-title">{eventData.name}</h1>
+                    <p className="event-description">{eventData.description}</p>
+                    <div className="event-info">
+                        <p><strong>Fecha de Inicio:</strong> {new Date(eventData.start_date).toLocaleDateString()}</p>
+                        <p><strong>Duración:</strong> {eventData.duration_in_minutes} minutos</p>
+                        <p><strong>Precio:</strong> ${eventData.price}</p>
+                        <p><strong>Creador:</strong> {eventData.creator_user.first_name} {eventData.creator_user.last_name}</p>
+                        {/* Agregar más detalles según sea necesario */}
+                    </div>
+                    <button className="subscribe-button" onClick={handleSuscribeToEvent}>Suscribirme</button>
                 </>
+            ) : (
+                <p>Cargando detalles del evento...</p>
             )}
-            {errorMessage && <p className="error">{errorMessage}</p>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );
 };

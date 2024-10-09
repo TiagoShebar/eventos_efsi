@@ -91,3 +91,28 @@
     color: #333;
   }
   
+  .create-button {
+    background-color: #4CAF50; /* Color verde */
+    color: white; /* Texto en blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1em; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor de mano al pasar */
+    transition: background 0.3s, transform 0.2s; /* Transiciones suaves */
+}
+
+.create-button:hover {
+    background-color: #45a049; /* Color verde más oscuro al pasar el mouse */
+    transform: translateY(-2px); /* Sube un poco el botón */
+}
+
+.create-button:active {
+    background-color: #39843c; /* Color verde aún más oscuro al hacer clic */
+    transform: translateY(0); /* Regresa a la posición original */
+}
+
+.create-button:focus {
+    outline: none; /* Sin contorno */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra al recibir foco */
+}

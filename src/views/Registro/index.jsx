@@ -70,7 +70,7 @@ const Registro = () => {
             try {
                 const response = await axios.post(`${config.url}api/user/register`, formData);
                 if (response.status === 201) {
-                    navigate('/login'); // Redirige al usuario a la página principal
+                    navigate(-1); // Redirige al usuario a la página principal
                 }
             } catch (error) {
                 if (error.response) {
