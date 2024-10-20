@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config';
 import { AuthContext } from "../../AuthContext";
-import './styles.css'; // Importa tus estilos aquí
+import './styles.css';
 
 const DetalleEvento = () => {
     const { id } = useParams();
@@ -45,7 +45,7 @@ const DetalleEvento = () => {
                 },
             });
             if (response.status === 200) {
-                setErrorMessage(''); // Clear previous error messages
+                setErrorMessage('');
             }
         } catch (error) {
             console.error('Error enrolling to event:', error);
@@ -64,7 +64,7 @@ const DetalleEvento = () => {
                         <p><strong>Duración:</strong> {eventData.duration_in_minutes} minutos</p>
                         <p><strong>Precio:</strong> ${eventData.price}</p>
                         <p><strong>Creador:</strong> {eventData.creator_user.first_name} {eventData.creator_user.last_name}</p>
-                        {/* Agregar más detalles según sea necesario */}
+                        //podria poner mas datos
                     </div>
                     <button className="subscribe-button" onClick={handleSuscribeToEvent}>Suscribirme</button>
                 </>

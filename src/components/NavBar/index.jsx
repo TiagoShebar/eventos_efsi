@@ -5,7 +5,7 @@ import { AuthContext } from "../../AuthContext";
 import React, { useContext, useState, useEffect } from 'react';
 import axios from "axios";
 import config from "../../config";
-import './styles.css'; // Asegúrate de importar el archivo CSS
+import './styles.css';
 
 const NavBar = () => {
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import config from '../../config';
-import FormInput from '../../components/FormInput'; // Asegúrate de que la ruta sea correcta
+import FormInput from '../../components/FormInput';
 import "./styles.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../AuthContext";
 
 const ListadoEventos = () => {
     const [events, setEvents] = useState([]);
-    const [page, setPage] = useState(1);  // Página actual
+    const [page, setPage] = useState(1);
     const [limit] = useState(10);
     const [total, setTotal] = useState(0);
     const [filters, setFilters] = useState({
@@ -17,7 +17,7 @@ const ListadoEventos = () => {
         name: '',
         category: ''
     });
-    const [applyFilters, setApplyFilters] = useState(false);  // Inicia en false para evitar solicitud automática
+    const [applyFilters, setApplyFilters] = useState(false);  
     const { ifIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -52,7 +52,6 @@ const ListadoEventos = () => {
         }
     };
 
-    // Ejecutar fetchEvents cuando cambia la página o se aplican filtros
     useEffect(() => {
         fetchEvents();
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -66,8 +65,8 @@ const ListadoEventos = () => {
     };
 
     const handleApplyFilters = () => {
-        setPage(1);  // Reinicia la página al aplicar filtros
-        setApplyFilters(!applyFilters);  // Dispara el efecto para hacer la solicitud
+        setPage(1);  
+        setApplyFilters(!applyFilters);
     };
 
     const handleNextPage = () => {
@@ -87,7 +86,7 @@ const ListadoEventos = () => {
         if(!ifIsLoggedIn()){
             return null;
         }
-        navigate('/formularioCrearEvento'); // Redirige a la página de creación de evento
+        navigate('/formularioCrearEvento');
     };
 
     return (

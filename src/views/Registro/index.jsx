@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import FormInput from '../../components/FormInput'; // Asegúrate de que la ruta sea correcta
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import './styles.css'; // Asegúrate de que el archivo CSS esté en la ruta correcta
+import FormInput from '../../components/FormInput';
+import { useNavigate } from 'react-router-dom';
+import './styles.css';
 import { Link } from 'react-router-dom';
 import config from '../../config';
 
@@ -21,9 +21,9 @@ const Registro = () => {
         password: '',
     });
 
-    const [registerError, setRegisterError] = useState(''); // Para manejar errores de registro
+    const [registerError, setRegisterError] = useState('');
 
-    const navigate = useNavigate(); // Crea una instancia de useNavigate
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,7 +37,6 @@ const Registro = () => {
         let valid = true;
         let newErrors = { first_name: '', last_name: '', username: '', password: '' };
 
-        // Validaciones
         if (formData.first_name.trim().length < 3) {
             newErrors.first_name = 'El nombre debe tener al menos 3 caracteres';
             valid = false;
@@ -70,7 +69,7 @@ const Registro = () => {
             try {
                 const response = await axios.post(`${config.url}api/user/register`, formData);
                 if (response.status === 201) {
-                    navigate(-1); // Redirige al usuario a la página principal
+                    navigate(-1);
                 }
             } catch (error) {
                 if (error.response) {

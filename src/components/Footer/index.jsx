@@ -1,11 +1,11 @@
 import React from 'react';
-import './styles.css'; // Asegúrate de importar el archivo CSS
+import './styles.css';
 
 const Footer = () => {
     return (
         <footer className="footer">
             <div className="footer-content">
-                <p>&copy; 2024 TuNombre. Todos los derechos reservados.</p>
+                <p>&copy; 2024 YO. Todos los derechos reservados.</p>
                 <div className="footer-links">
                     <a href="#">Sobre nosotros</a>
                     <a href="#">Contacto</a>

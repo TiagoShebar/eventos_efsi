@@ -29,7 +29,7 @@ const FormularioEvento = () => {
             ...eventData,
             [name]: type === 'checkbox' ? checked : value,
         });
-        setError(''); // Clear error message on input change
+        setError('');
     };
     
     useEffect(() => {
@@ -40,12 +40,12 @@ const FormularioEvento = () => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      setError(''); // Clear previous errors
+      setError('');
       setSuccess('');
   
       const token = localStorage.getItem('token');
       
-      // Format the start_date to 'YYYY-MM-DDTHH:MM:SS'
+      
       const formattedStartDate = new Date(eventData.start_date).toISOString().slice(0, 19);
       
       const formattedEventData = {
@@ -61,7 +61,7 @@ const FormularioEvento = () => {
           });
           setSuccess('Evento creado con éxito!');
           console.log('Respuesta del servidor:', response.data);
-          // Clear the form after submission
+        
           setEventData({
               name: '',
               description: '',
@@ -75,9 +75,9 @@ const FormularioEvento = () => {
           });
       } catch (error) {
           console.error('Error al crear el evento:', error);
-          // Display specific error message
+         
           if (error.response && error.response.data) {
-              // Example of extracting a message from the error object
+              
               setError(error.response.data.message || error.response.data.detail || 'Ocurrió un error. Intenta nuevamente.');
           } else {
               setError('Ocurrió un error al crear el evento. Intenta nuevamente.');
@@ -85,7 +85,6 @@ const FormularioEvento = () => {
       }
   };
   
-  // In your render return section:
   {error && <div className="alert alert-danger">{error}</div>}
 
     return (

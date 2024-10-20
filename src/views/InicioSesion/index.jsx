@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import FormInput from '../../components/FormInput';
 import config from '../../config';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom';
 import "./styles.css";
 import { Link } from 'react-router-dom';
 
@@ -17,9 +17,9 @@ const InicioSesion = () => {
         password: ''
     });
 
-    const [loginError, setLoginError] = useState(''); // Para manejar errores de login
+    const [loginError, setLoginError] = useState(''); 
 
-    const navigate = useNavigate(); // Crea una instancia de useNavigate
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,15 +44,18 @@ const InicioSesion = () => {
                 const response = await axios.post(`${config.url}api/user/login`, formData);
                 console.log('Respuesta del servidor:', response.data);
                 if (response.data.success) {
-                    // Guardar el token y redirigir
                     console.log('Inicio de sesión exitoso');
                     localStorage.setItem("token", response.data.token);
-                    window.location.reload();
                     navigate(-1);
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 100);
                     
                 } else {
                     setLoginError(response.data.message);
                 }
+                
             } catch (error) {
                 console.error('Error en la solicitud:', error);
                 setLoginError('Error al iniciar sesión. Intenta nuevamente.');
