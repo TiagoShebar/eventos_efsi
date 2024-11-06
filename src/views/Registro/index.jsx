@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FormInput from '../../components/FormInput';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,11 @@ import { Link } from 'react-router-dom';
 import config from '../../config';
 
 const Registro = () => {
+
+    useEffect(() => {
+        localStorage.setItem("navigationHistory", true);
+    }, [])
+
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',

@@ -21,6 +21,10 @@ const ListadoEventos = () => {
     const { ifIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        localStorage.setItem("navigationHistory", false);
+    }, [])
+
     const fetchEvents = async () => {
         const { name = '', tag = '', category = '' } = filters;
         let queryParams = [];

@@ -21,6 +21,9 @@ const InicioSesion = () => {
 
     const navigate = useNavigate();
 
+
+  
+    console.log(navigate.state);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -46,8 +49,15 @@ const InicioSesion = () => {
                 if (response.data.success) {
                     console.log('Inicio de sesión exitoso');
                     localStorage.setItem("token", response.data.token);
-                    navigate(-1);
-
+                    const history = localStorage.getItem("navigationHistory");
+                    if(history === "true") {
+                        const history = localStorage.setItem("navigationHistory", false);
+                        navigate("/");
+                    }
+                    else{
+                        navigate(-1);
+                    }
+                    
                     setTimeout(() => {
                         window.location.reload();
                     }, 100);
@@ -63,6 +73,7 @@ const InicioSesion = () => {
         }
     };
 
+    
     return (
         <div className="login-container">
             <h2>Inicio de Sesión</h2>
