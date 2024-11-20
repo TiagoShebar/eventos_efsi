@@ -10,6 +10,8 @@ import { AuthProvider } from "./AuthContext";
 import Footer from './components/Footer/index.jsx';
 import DetalleEvento from './views/DetalleEvento/index.jsx';
 import FormularioEvento from './views/FormularioEvento/index.jsx';
+import FormularioEventLocation from './views/FormularioEventLocation/index.jsx'; 
+import FormularioEventCategory from './views/FormularioEventCategory/index.jsx'; 
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route exact path="/register" element={<Registro />} />
           <Route exact path="/detailEvent/:id" element={<DetalleEvento/>}/>
           <Route exact path="/formularioCrearEvento" element={<FormularioEvento/>}/>
+          <Route exact path="/formularioEventLocation" element={<FormularioEventLocation/>}/>
+          <Route exact path="/formularioEventCategory" element={<FormularioEventCategory/>}/>
         </Routes>   
       </main>
       <Footer />

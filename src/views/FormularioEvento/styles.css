@@ -18,19 +18,54 @@
     margin-bottom: 15px;
   }
   
-  .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .form-control:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
+  /* Estilo general de los select */
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Estilo del select cuando está enfocado */
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Para mejorar la apariencia de las opciones del select */
+.form-control option {
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* Ajuste de los select para que coincidan con el estilo de los inputs */
+select.form-control {
+  appearance: none; /* Elimina la flecha predeterminada en algunos navegadores */
+  -webkit-appearance: none; /* En Safari */
+  -moz-appearance: none; /* En Firefox */
+  background-image: url('data:image/svg+xml;utf8,<svg width="10" height="5" viewBox="0 0 10 5" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 5,5 10,0" fill="%23aaa"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Coloca la flecha a la derecha */
+  padding-right: 30px; /* Espacio para la flecha */
+}
+
+/* Estilo cuando el select está deshabilitado o no tiene opciones */
+select.form-control:disabled {
+  background-color: #f0f0f0;
+  border-color: #ddd;
+  color: #888;
+}
+
+/* Mensaje de carga mientras se cargan las categorías o ubicaciones */
+select.form-control option:empty {
+  color: #999;
+  font-style: italic;
+}
   
   .alert {
     padding: 10px;

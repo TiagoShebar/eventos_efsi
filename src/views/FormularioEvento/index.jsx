@@ -5,6 +5,7 @@ import './styles.css';
 import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../AuthContext";
+import Select from 'react-select';
 
 const FormularioEvento = () => {
     const [eventData, setEventData] = useState({
@@ -18,8 +19,11 @@ const FormularioEvento = () => {
         enabled_for_enrollment: false,
         max_assistance: '',
     });
+    const [categories, setCategories] = useState([]);
+    const [locations, setLocations] = useState([]);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(true);  // Estado de carga
     const { isLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -32,60 +36,88 @@ const FormularioEvento = () => {
         setError('');
     };
     
-    useEffect(() => {
-        if (!isLoggedIn) {
-            navigate(-1);
-        }
-    }, [isLoggedIn, navigate]);
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError('');
-      setSuccess('');
-  
-      const token = localStorage.getItem('token');
-      
-      
-      const formattedStartDate = new Date(eventData.start_date).toISOString().slice(0, 19);
-      
-      const formattedEventData = {
-          ...eventData,
-          start_date: formattedStartDate,
-      };
-  
-      try {
-          const response = await axios.post(`${config.url}api/event`, formattedEventData, {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-              },
-          });
-          setSuccess('Evento creado con éxito!');
-          console.log('Respuesta del servidor:', response.data);
+    useEffect(() => {
+        // Cargar las categorías y ubicaciones
+        const fetchCategoriesAndLocations = async () => {
+            const token = localStorage.getItem('token');
+
+            try {
+                const categoriesResponse = await axios.get(`${config.url}api/event-category`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,  // Agregar el Bearer token en la cabecera
+                    },
+                    
+                    params: { limit: 100000 },
+                });
+                const locationsResponse = await axios.get(`${config.url}api/event-location`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,  // Agregar el Bearer token en la cabecera
+                    },
+                    params: { limit: 100000 },
+                });
+                
+                setCategories(categoriesResponse.data.collection);
+                setLocations(locationsResponse.data.collection);
+                console.log(categoriesResponse.data.collection, locationsResponse.data.collection);
+            } catch (error) {
+                console.error('Error fetching categories and locations:', error);
+                setError('Error al cargar categorías y ubicaciones');
+            } finally {
+                setLoading(false);  // Cambiar a false cuando termine de cargar
+            }
+        };
         
-          setEventData({
-              name: '',
-              description: '',
-              id_event_category: '',
-              id_event_location: '',
-              start_date: '',
-              duration_in_minutes: '',
-              price: '',
-              enabled_for_enrollment: false,
-              max_assistance: '',
-          });
-      } catch (error) {
-          console.error('Error al crear el evento:', error);
-         
-          if (error.response && error.response.data) {
-              
-              setError(error.response.data.message || error.response.data.detail || 'Ocurrió un error. Intenta nuevamente.');
-          } else {
-              setError('Ocurrió un error al crear el evento. Intenta nuevamente.');
-          }
-      }
-  };
+        fetchCategoriesAndLocations();
+    }, []); 
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
   
-  {error && <div className="alert alert-danger">{error}</div>}
+        const token = localStorage.getItem('token');
+      
+        const formattedStartDate = new Date(eventData.start_date).toISOString().slice(0, 19);
+        const formattedEventData = {
+            ...eventData,
+            start_date: formattedStartDate,
+        };
+  
+        try {
+            const response = await axios.post(`${config.url}api/event`, formattedEventData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setSuccess('Evento creado con éxito!');
+            console.log('Respuesta del servidor:', response.data);
+        
+            setEventData({
+                name: '',
+                description: '',
+                id_event_category: '',
+                id_event_location: '',
+                start_date: '',
+                duration_in_minutes: '',
+                price: '',
+                enabled_for_enrollment: false,
+                max_assistance: '',
+            });
+        } catch (error) {
+            console.error('Error al crear el evento:', error);
+            if (error.response && error.response.data) {
+                setError(error.response.data.message || error.response.data.detail || 'Ocurrió un error. Intenta nuevamente.');
+            } else {
+                setError('Ocurrió un error al crear el evento. Intenta nuevamente.');
+            }
+        }
+    };
+
+    // Condicionar el renderizado para esperar hasta que se hayan cargado las categorías y ubicaciones
+    if (loading) {
+        return <div>Cargando...</div>;  // Mostrar un mensaje o spinner mientras se cargan los datos
+    }
 
     return (
         <div className="container">
@@ -93,7 +125,7 @@ const FormularioEvento = () => {
             <form onSubmit={handleSubmit}>
                 {error && <div className="alert alert-danger">{error}</div>}
                 {success && <div className="alert alert-success">{success}</div>}
-        
+
                 <FormInput
                     label="Nombre del Evento"
                     type="text"
@@ -112,24 +144,40 @@ const FormularioEvento = () => {
                     placeholder="Ingresa una descripción del evento"
                     className="form-control"
                 />
-                <FormInput
-                    label="Categoría del Evento"
-                    type="text"
-                    name="id_event_category"
-                    value={eventData.id_event_category}
-                    onChange={handleChange}
-                    placeholder="Ingresa la categoría del evento"
-                    className="form-control"
-                />
-                <FormInput
-                    label="Ubicación del Evento"
-                    type="text"
-                    name="id_event_location"
-                    value={eventData.id_event_location}
-                    onChange={handleChange}
-                    placeholder="Ingresa la ubicación del evento"
-                    className="form-control"
-                />
+                {/* Categoría del Evento con react-select */}
+<div className="form-group">
+    <label>Categoría del Evento</label>
+    <Select
+        name="id_event_category"
+        value={categories.find(cat => cat.id === eventData.id_event_category) || { value: "", label: "Seleccionar una categoría" }}  // Aseguramos que siempre haya un objeto válido
+        onChange={(selectedOption) =>
+            setEventData({ ...eventData, id_event_category: selectedOption ? selectedOption.value : "" })  // Asegura que el valor sea válido
+        }
+        options={categories.map(category => ({
+            value: category.id,
+            label: category.name
+        }))}
+        placeholder="Selecciona una categoría"
+    />
+</div>
+
+{/* Ubicación del Evento con react-select */}
+<div className="form-group">
+    <label>Ubicación del Evento</label>
+    <Select
+        name="id_event_location"
+        value={locations.find(loc => loc.id === eventData.id_event_location) || { value: "", label: "Seleccionar una ubicación" }}  // Aseguramos que siempre haya un objeto válido
+        onChange={(selectedOption) =>
+            setEventData({ ...eventData, id_event_location: selectedOption ? selectedOption.value : "" })  // Asegura que el valor sea válido
+        }
+        options={locations.map(location => ({
+            value: location.id,
+            label: location.name
+        }))}
+        placeholder="Selecciona una ubicación"
+    />
+</div>
+
                 <FormInput
                     label="Fecha de Inicio"
                     type="date"

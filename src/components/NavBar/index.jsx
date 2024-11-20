@@ -11,6 +11,7 @@ const NavBar = () => {
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
     const [username, setUsername] = useState(null);
     const [hasFetchedUsername, setHasFetchedUsername] = useState(false);
+    const [showEditLinks, setShowEditLinks] = useState(false);
 
     useEffect(() => {
         const fetchUsername = async () => {
@@ -46,11 +47,28 @@ const NavBar = () => {
                 <img src={logo} alt="Logo" />
             </Link>
             <div className="navbar-links">
+                {/* Botón de "Editar" */}
+                <div 
+                            className="edit-button"
+                            onMouseEnter={() => setShowEditLinks(true)}  // Mostrar los enlaces al pasar el mouse
+                            onMouseLeave={() => setShowEditLinks(false)}  // Ocultar los enlaces al quitar el mouse
+                        >
+                            <button className="edit-btn">Editar</button>
+
+                            {/* Links para Locations y Categories */}
+                            {showEditLinks && (
+                                <div className="edit-links">
+                                    <Link to="/formularioEventLocation">Locations</Link>
+                                    <Link to="/formularioEventCategory">Categories</Link>
+                                </div>
+                            )}
+                        </div>
                 <Link to="/">Home</Link>
                 {isLoggedIn ? (
                     <div className="user-info">
                         <img src={userPhoto} alt="User" className="user-photo" />
                         <span>{username}</span>
+                                
                         <button onClick={handleCloseSession} className="logout-button">Cerrar sesión</button>
                     </div>
                 ) : (
