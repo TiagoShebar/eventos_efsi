@@ -47,14 +47,14 @@ const NavBar = () => {
                 <img src={logo} alt="Logo" />
             </Link>
             <div className="navbar-links">
-                {/* Botón de "Editar" */}
-                <div 
-                            className="edit-button"
-                            onMouseEnter={() => setShowEditLinks(true)}  // Mostrar los enlaces al pasar el mouse
-                            onMouseLeave={() => setShowEditLinks(false)}  // Ocultar los enlaces al quitar el mouse
-                        >
+                
+                <Link to="/">Home</Link>
+                {isLoggedIn ? (
+                    <>
+                        {/* Botón de "Editar" */}
+                        <div className="edit-button" onMouseEnter={() => setShowEditLinks(true)} onMouseLeave={() => setShowEditLinks(false)}>
                             <button className="edit-btn">Editar</button>
-
+    
                             {/* Links para Locations y Categories */}
                             {showEditLinks && (
                                 <div className="edit-links">
@@ -63,20 +63,21 @@ const NavBar = () => {
                                 </div>
                             )}
                         </div>
-                <Link to="/">Home</Link>
-                {isLoggedIn ? (
-                    <div className="user-info">
-                        <img src={userPhoto} alt="User" className="user-photo" />
-                        <span>{username}</span>
-                                
-                        <button onClick={handleCloseSession} className="logout-button">Cerrar sesión</button>
-                    </div>
+    
+                        <div className="user-info">
+                            <img src={userPhoto} alt="User" className="user-photo" />
+                            <span>{username}</span>
+                                    
+                            <button onClick={handleCloseSession} className="logout-button">Cerrar sesión</button>
+                        </div>
+                    </>
                 ) : (
                     <Link to="/login" className="login-button">Ingresar</Link>
                 )}
             </div>
         </nav>
     );
+    
 };
 
 export default NavBar;

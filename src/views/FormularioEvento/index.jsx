@@ -24,6 +24,8 @@ const FormularioEvento = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(true);  // Estado de carga
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const { isLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -106,8 +108,9 @@ const FormularioEvento = () => {
             });
         } catch (error) {
             console.error('Error al crear el evento:', error);
+            console.log(error.response)
             if (error.response && error.response.data) {
-                setError(error.response.data.message || error.response.data.detail || 'Ocurrió un error. Intenta nuevamente.');
+                setError(error.response.data || error.response.data.detail || 'Ocurrió un error. Intenta nuevamente.');
             } else {
                 setError('Ocurrió un error al crear el evento. Intenta nuevamente.');
             }
@@ -145,14 +148,15 @@ const FormularioEvento = () => {
                     className="form-control"
                 />
                 {/* Categoría del Evento con react-select */}
-<div className="form-group">
+                <div className="form-group">
     <label>Categoría del Evento</label>
     <Select
         name="id_event_category"
-        value={categories.find(cat => cat.id === eventData.id_event_category) || { value: "", label: "Seleccionar una categoría" }}  // Aseguramos que siempre haya un objeto válido
-        onChange={(selectedOption) =>
-            setEventData({ ...eventData, id_event_category: selectedOption ? selectedOption.value : "" })  // Asegura que el valor sea válido
-        }
+        value={selectedCategory} // Aseguramos que el valor no sea undefined ni null
+        onChange={(selectedOption) => {
+            setEventData({ ...eventData, id_event_category: selectedOption.value });
+            setSelectedCategory(selectedOption);
+        }}
         options={categories.map(category => ({
             value: category.id,
             label: category.name
@@ -161,15 +165,19 @@ const FormularioEvento = () => {
     />
 </div>
 
+
+
 {/* Ubicación del Evento con react-select */}
 <div className="form-group">
     <label>Ubicación del Evento</label>
     <Select
         name="id_event_location"
-        value={locations.find(loc => loc.id === eventData.id_event_location) || { value: "", label: "Seleccionar una ubicación" }}  // Aseguramos que siempre haya un objeto válido
-        onChange={(selectedOption) =>
-            setEventData({ ...eventData, id_event_location: selectedOption ? selectedOption.value : "" })  // Asegura que el valor sea válido
-        }
+        value={selectedLocation}  // Aseguramos que siempre haya un objeto válido
+        onChange={(selectedOption) =>{
+            setEventData({ ...eventData, id_event_location: selectedOption && selectedOption.value });
+              // Asegura que el valor sea válido
+            setSelectedLocation(selectedOption);
+        }}
         options={locations.map(location => ({
             value: location.id,
             label: location.name
