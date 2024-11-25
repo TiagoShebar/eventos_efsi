@@ -40,21 +40,21 @@ const FormularioEvento = () => {
     
 
     useEffect(() => {
-        // Cargar las categorías y ubicaciones
+        
         const fetchCategoriesAndLocations = async () => {
             const token = localStorage.getItem('token');
 
             try {
                 const categoriesResponse = await axios.get(`${config.url}api/event-category`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,  // Agregar el Bearer token en la cabecera
+                        Authorization: `Bearer ${token}`, 
                     },
                     
                     params: { limit: 100000 },
                 });
                 const locationsResponse = await axios.get(`${config.url}api/event-location`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,  // Agregar el Bearer token en la cabecera
+                        Authorization: `Bearer ${token}`,
                     },
                     params: { limit: 100000 },
                 });
@@ -66,7 +66,7 @@ const FormularioEvento = () => {
                 console.error('Error fetching categories and locations:', error);
                 setError('Error al cargar categorías y ubicaciones');
             } finally {
-                setLoading(false);  // Cambiar a false cuando termine de cargar
+                setLoading(false);
             }
         };
         
@@ -117,9 +117,8 @@ const FormularioEvento = () => {
         }
     };
 
-    // Condicionar el renderizado para esperar hasta que se hayan cargado las categorías y ubicaciones
     if (loading) {
-        return <div>Cargando...</div>;  // Mostrar un mensaje o spinner mientras se cargan los datos
+        return <div>Cargando...</div>;
     }
 
     return (
@@ -147,12 +146,12 @@ const FormularioEvento = () => {
                     placeholder="Ingresa una descripción del evento"
                     className="form-control"
                 />
-                {/* Categoría del Evento con react-select */}
+                
                 <div className="form-group">
     <label>Categoría del Evento</label>
     <Select
         name="id_event_category"
-        value={selectedCategory} // Aseguramos que el valor no sea undefined ni null
+        value={selectedCategory}
         onChange={(selectedOption) => {
             setEventData({ ...eventData, id_event_category: selectedOption.value });
             setSelectedCategory(selectedOption);
@@ -167,15 +166,14 @@ const FormularioEvento = () => {
 
 
 
-{/* Ubicación del Evento con react-select */}
 <div className="form-group">
     <label>Ubicación del Evento</label>
     <Select
         name="id_event_location"
-        value={selectedLocation}  // Aseguramos que siempre haya un objeto válido
+        value={selectedLocation}
         onChange={(selectedOption) =>{
             setEventData({ ...eventData, id_event_location: selectedOption && selectedOption.value });
-              // Asegura que el valor sea válido
+             
             setSelectedLocation(selectedOption);
         }}
         options={locations.map(location => ({

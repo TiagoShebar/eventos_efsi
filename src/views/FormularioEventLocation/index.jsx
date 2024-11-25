@@ -4,25 +4,25 @@ import config from "../../config";
 import Select from 'react-select';
 
 const FormularioEventLocation = () => {
-    const [locations, setLocations] = useState([]); // Para almacenar las ubicaciones
-    const [selectedLocation, setSelectedLocation] = useState(null); // Para almacenar la ubicación seleccionada
-    const [locationDetails, setLocationDetails] = useState(null); // Para almacenar los detalles de la ubicación
+    const [locations, setLocations] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [locationDetails, setLocationDetails] = useState(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(true);
 
-    // Cargar las ubicaciones disponibles
+    
     useEffect(() => {
         const fetchLocations = async () => {
             const token = localStorage.getItem('token');
             try {
                 const response = await axios.get(`${config.url}api/event-location`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,  // Enviar token en las cabeceras
+                        Authorization: `Bearer ${token}`,
                     },
                     params: { limit: 100000 },
                 });
-                setLocations(response.data.collection); // Almacenamos las ubicaciones
+                setLocations(response.data.collection);
             } catch (error) {
                 console.error('Error fetching locations:', error);
                 setError('Error al cargar ubicaciones');
@@ -31,28 +31,28 @@ const FormularioEventLocation = () => {
             }
         };
         fetchLocations();
-    }, []); // Este useEffect se ejecuta solo una vez al cargar el componente
+    }, []);
 
-    // Cuando se selecciona una ubicación, obtener sus detalles
+    
     const handleLocationChange = async (selectedOption) => {
-        setSelectedLocation(selectedOption); // Guardar la ubicación seleccionada
-        if (!selectedOption) return; // Si no se seleccionó ninguna, no hacemos nada
+        setSelectedLocation(selectedOption);
+        if (!selectedOption) return;
 
-        // Cargar los detalles de la ubicación seleccionada
+        
         const token = localStorage.getItem('token');
         try {
             const response = await axios.get(`${config.url}api/event-location/${selectedOption.value}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            setLocationDetails(response.data); // Guardamos los detalles de la ubicación
-            setError(''); // Limpiar cualquier error anterior
+            setLocationDetails(response.data);
+            setError('');
         } catch (error) {
             console.error('Error fetching location details:', error);
             setError('Error al cargar los detalles de la ubicación');
         }
     };
 
-    // Enviar el formulario con los nuevos detalles
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -60,11 +60,11 @@ const FormularioEventLocation = () => {
 
         const token = localStorage.getItem('token');
         try {
-            // Aquí no enviamos el ID en la URL, sino en el cuerpo de la solicitud
+            
             await axios.put(
-                `${config.url}api/event-location`, // La URL ahora no contiene el ID
+                `${config.url}api/event-location`,
                 {
-                    id: locationDetails.id,  // Enviar el ID en el cuerpo de la solicitud
+                    id: locationDetails.id,
                     full_address: locationDetails.full_address,
                     max_capacity: locationDetails.max_capacity,
                     latitude: locationDetails.latitude,
@@ -77,7 +77,7 @@ const FormularioEventLocation = () => {
 
             setError('');
             setSuccess('Ubicación actualizada correctamente');
-            // Puedes decidir si recargar la página o redirigir al usuario a otro lugar
+            
             window.location.reload(); 
         } catch (error) {
             if (error.response) {
@@ -85,12 +85,12 @@ const FormularioEventLocation = () => {
                 setError(error.response.data || 'Error al cargar los detalles de la ubicación');
             }
             else if (error.request) {
-                // Si la solicitud fue hecha pero no se recibió respuesta
+                
                 console.log('Error request:', error.request);
                 setError('No se recibió respuesta del servidor');
             }
             else {
-                // Si hubo un error en la configuración de la solicitud
+                
                 console.log('Error message:', error.message);
                 setError('Error desconocido');
             }

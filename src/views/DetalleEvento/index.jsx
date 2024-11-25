@@ -64,7 +64,7 @@ const DetalleEvento = () => {
                         <p><strong>Duración:</strong> {eventData.duration_in_minutes} minutos</p>
                         <p><strong>Precio:</strong> ${eventData.price}</p>
                         <p><strong>Creador:</strong> {eventData.creator_user.first_name} {eventData.creator_user.last_name}</p>
-                        //podria poner mas datos
+                        
                     </div>
                     <button className="subscribe-button" onClick={handleSuscribeToEvent}>Suscribirme</button>
                 </>
